@@ -1,0 +1,15 @@
+node_modules/
+dist/
+dist-desktop/
+artifacts/
+files.txt
+.env
+.env.*
+!.env.example
+/.npmrc
+*.pem
+*.p12
+*.pfx
+credentials.json
+secrets.*
+.DS_Store

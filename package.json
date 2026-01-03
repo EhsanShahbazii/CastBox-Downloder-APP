@@ -1,0 +1,35 @@
+{
+  "name": "castbox-desktop",
+  "version": "0.1.0-preview.1",
+  "private": true,
+  "type": "module",
+  "main": "dist-desktop/main.cjs",
+  "workspaces": [
+    "ai-studio-frontend"
+  ],
+  "scripts": {
+    "dev:ui": "npm run dev --workspace @castbox/frontend",
+    "build:desktop": "node scripts/build-desktop.mjs",
+    "build": "npm run typecheck && npm run build --workspace @castbox/frontend && npm run build:desktop",
+    "start": "npm run build && electron .",
+    "typecheck": "tsc --noEmit && npm run typecheck --workspace @castbox/frontend",
+    "test": "tsx --test tests/*.test.ts",
+    "check": "npm run build && npm test",
+    "test:catalog:live": "tsx scripts/catalog-smoke.ts",
+    "test:catalog:native": "npm run build:desktop && node scripts/native-catalog-test.mjs",
+    "test:library:native": "npm run build:desktop && node scripts/native-library-test.mjs",
+    "test:planning:native": "npm run build:desktop && node scripts/native-planning-test.mjs",
+    "test:transfers:native": "npm run build:desktop && node scripts/native-transfers-test.mjs",
+    "test:playback:native": "npm run build:desktop && node scripts/native-playback-test.mjs"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "electron": "44.6.0",
+    "esbuild": "^0.28.0",
+    "tsx": "^4.21.0",
+    "typescript": "^7.0.2",
+    "@types/node": "^22.14.0"
+  }
+}
