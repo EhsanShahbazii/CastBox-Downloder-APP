@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --color-canvas-light: #F8F5EE;
+  --color-canvas-dark: #1B1613;
+  --color-brand-orange: #C05322;
+  --color-brand-orange-hover: #A94516;
+}
+
+:root {
+  color-scheme: light;
+  --app-bg: #FAF7F1;
+  --app-input-bg: #F1EBE3;
+  --app-border: #DED3C7;
+  --app-input-border: #DED3C7;
+  --app-text-primary: #291A14;
+  --app-text-secondary: #706158;
+  --app-text-muted: #706158;
+  --app-accent: #B84316;
+  --app-rail: #DED3C7;
+}
+
+.dark {
+  color-scheme: dark;
+  --app-bg: #211C19;
+  --app-input-bg: #2C2520;
+  --app-border: #51443A;
+  --app-input-border: #51443A;
+  --app-text-primary: #FAF2E6;
+  --app-text-secondary: #C5B6A8;
+  --app-text-muted: #C5B6A8;
+  --app-accent: #D65B23;
+  --app-rail: #51443A;
+}
+
+html {
+  /* Keep anchor targets and keyboard focus below the shared 57px header. */
+  scroll-padding-top: 4.5rem;
+}
+
+body {
+  background-color: var(--app-bg);
+  color: var(--app-text-primary);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  margin: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Custom scrollbars that match the warm aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--app-border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--app-accent);
+}

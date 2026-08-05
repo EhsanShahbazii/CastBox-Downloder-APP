@@ -1,0 +1,9 @@
+These isolated artwork assets are crops of the episode/channel artwork visible in
+the supplied design references. The surrounding application UI was excluded.
+
+- coffee-break.png, morning-brew.png, slow-sundays.png: design/screens/02-find-light.png
+- late-night-drive.png, somewhere-somehow.png, little-more-time.png, blue-hour.png:
+  design/screens/12-downloads-light.png
+
+The crops are used as artwork only; no reference screenshot is rendered as a UI
+background.

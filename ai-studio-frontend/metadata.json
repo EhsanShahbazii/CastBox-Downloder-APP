@@ -1,0 +1,6 @@
+{
+  "name": "Castbox Downloader & Player",
+  "description": "Desktop Castbox Downloader & Player with editorial discovery, channel search, and audio playback.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
