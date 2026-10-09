@@ -154,6 +154,20 @@ npm ci
 npm start
 ```
 
+### Prebuilt macOS App Installation (DMG)
+
+If macOS displays:
+> **“CastBox Downloader” is damaged and can’t be opened. You should move it to the Trash.**
+
+This is standard macOS Gatekeeper behavior for open-source apps without a paid Apple Developer ID certificate. To resolve it:
+1. Drag **CastBox Downloader.app** to your `/Applications` folder.
+2. Run this command in **Terminal**:
+```bash
+xattr -cr "/Applications/CastBox Downloader.app"
+codesign --force --deep --sign - "/Applications/CastBox Downloader.app"
+```
+3. Open the app from Applications or Spotlight.
+
 ### Development Scripts
 
 | Command | Action |
