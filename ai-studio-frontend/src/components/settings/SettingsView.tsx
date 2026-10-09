@@ -21,6 +21,7 @@ import {
   Eye,
   EyeOff,
   ShieldCheck,
+  LogIn,
 } from 'lucide-react';
 import { useTheme } from '../../theme/ThemeContext';
 import {
@@ -87,6 +88,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [isClearCacheModalOpen, setIsClearCacheModalOpen] = useState(false);
   const [showToken, setShowToken] = useState(false);
+  const [loggingIn, setLoggingIn] = useState(false);
 
   // Storage cache mock state
   const [cacheSizeMB, setCacheSizeMB] = useState<number>(() => {
@@ -267,6 +269,32 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       if (result.value) { setFormData(prev => ({ ...prev, downloadDestination: result.value!.path })); onDestinationGrant?.(result.value); }
     } catch (error) {
       onShowDiscreetToast(error instanceof Error ? error.message : 'Folder selection failed');
+    }
+  };
+
+  const handleWebLogin = async () => {
+    if (!window.castboxDesktop?.loginWeb) return;
+    setLoggingIn(true);
+    try {
+      const result = await window.castboxDesktop.loginWeb();
+      if (!result.ok) throw new Error(result.error);
+      if (result.value) {
+        setFormData(prev => ({
+          ...prev,
+          userToken: result.value!.userToken,
+          userTokenSecret: result.value!.userTokenSecret ?? '',
+        }));
+        setSavedBaseline(prev => ({
+          ...prev,
+          userToken: result.value!.userToken,
+          userTokenSecret: result.value!.userTokenSecret ?? '',
+        }));
+        onShowDiscreetToast('Castbox account connected successfully.');
+      }
+    } catch (error) {
+      onShowDiscreetToast(error instanceof Error ? error.message : 'Web login was not completed.');
+    } finally {
+      setLoggingIn(false);
     }
   };
 
@@ -656,6 +684,28 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             </div>
 
             <div className="mt-6 pt-5 border-t border-[var(--app-border)] space-y-6">
+              {nativeMode && (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-[var(--app-card-bg)] border border-[var(--app-border)]">
+                  <div>
+                    <h3 className="text-sm font-semibold text-[var(--app-text-primary)]">
+                      1-Click Web Login
+                    </h3>
+                    <p className="text-xs text-[var(--app-text-secondary)] mt-0.5">
+                      Log in to Castbox in a secure browser window. Your session token is captured automatically.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleWebLogin}
+                    disabled={loggingIn}
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-[var(--app-accent)] text-white hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer shadow-sm shrink-0"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    {loggingIn ? 'Connecting...' : 'Log in via Castbox Web'}
+                  </button>
+                </div>
+              )}
+
               {/* Access Token */}
               <div>
                 <div className="flex items-center justify-between mb-1">

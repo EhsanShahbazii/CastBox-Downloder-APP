@@ -44,6 +44,7 @@ export interface DesktopBridge {
   readSettings(): Promise<Result<AppSettings>>;
   saveSettings(settings: AppSettings): Promise<Result<AppSettings>>;
   chooseDownloadDirectory(): Promise<Result<DirectoryGrant | null>>;
+  loginWeb?(): Promise<Result<{ userToken: string; userTokenSecret?: string } | null>>;
 }
 
 export function defaultSettings(downloadDestination: string): AppSettings {

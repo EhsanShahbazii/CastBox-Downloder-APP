@@ -45,5 +45,6 @@ const bridge: DesktopBridge = {
   readSettings: () => ipcRenderer.invoke('settings:read'),
   saveSettings: settings => ipcRenderer.invoke('settings:save', settings),
   chooseDownloadDirectory: () => ipcRenderer.invoke('settings:choose-directory'),
+  loginWeb: () => ipcRenderer.invoke('auth:login-web'),
 };
 contextBridge.exposeInMainWorld('castboxDesktop', Object.freeze(bridge));

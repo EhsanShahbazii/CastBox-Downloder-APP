@@ -110,6 +110,7 @@ export async function recoverFinal(job: TransferRecord, grants: DirectoryGrants,
 export async function checkAudio(fd: FileHandle, extension: string) {
   const b = Buffer.alloc(16); const { bytesRead } = await fd.read(b, 0, 16, 0);
   const text = b.toString('ascii');
-  const valid = bytesRead >= 4 && (extension === '.mp3' ? text.startsWith('ID3') || (b[0] === 255 && (b[1] & 224) === 224) : extension === '.m4a' ? text.slice(4,8) === 'ftyp' : extension === '.wav' ? text.startsWith('RIFF') && text.slice(8,12) === 'WAVE' : extension === '.flac' ? text.startsWith('fLaC') : ['.ogg','.opus'].includes(extension) ? text.startsWith('OggS') : extension === '.aac' ? (b[0] === 255 && (b[1] & 246) === 240) || text.startsWith('ADIF') : false);
-  if (!valid) throw new TransferError('The response is not a recognized audio file for this extension.');
+  const exact = bytesRead >= 4 && (extension === '.mp3' ? text.startsWith('ID3') || (b[0] === 255 && (b[1] & 224) === 224) : extension === '.m4a' ? text.slice(4,8) === 'ftyp' : extension === '.wav' ? text.startsWith('RIFF') && text.slice(8,12) === 'WAVE' : extension === '.flac' ? text.startsWith('fLaC') : ['.ogg','.opus'].includes(extension) ? text.startsWith('OggS') : extension === '.aac' ? (b[0] === 255 && (b[1] & 246) === 240) || text.startsWith('ADIF') : false);
+  const anyAudio = bytesRead >= 4 && (text.startsWith('ID3') || (b[0] === 255 && (b[1] & 224) === 224) || text.slice(4,8) === 'ftyp' || (text.startsWith('RIFF') && text.slice(8,12) === 'WAVE') || text.startsWith('fLaC') || text.startsWith('OggS') || (b[0] === 255 && (b[1] & 246) === 240) || text.startsWith('ADIF'));
+  if (!exact && !anyAudio) throw new TransferError('The response is not a recognized audio file for this extension.');
 }

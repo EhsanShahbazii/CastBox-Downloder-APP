@@ -36,6 +36,7 @@ Whether you are archiving educational series, traveling off-grid, or managing la
 - **Multi-Stream Concurrency:** Download up to 5 episodes simultaneously with configurable bandwidth limits.
 - **Interruption Recovery & ETag Validation:** Resume broken downloads without redownloading transferred bytes, backed by strong HTTP ETag verification.
 - **Atomic File Publishing:** In-flight downloads are written to private temporary buffers (`.part`) and atomically published to prevent partial or corrupted audio files.
+- **Resilient Audio Format Detection:** Handles mislabeled server file extensions (e.g. M4A served with `.mp3` filenames) while preventing corrupt or non-audio downloads.
 - **Customizable File Naming:** Format filenames with smart tokens (`{channel}`, `{title}`, `{date}`, `{eid}`) and group downloads by channel directory.
 - **Safe Duplicate Handling:** Explicit options to skip, rename, or overwrite existing media with zero risk of file aliasing.
 
@@ -51,9 +52,10 @@ Whether you are archiving educational series, traveling off-grid, or managing la
 - **Health Check & Relocation:** Automatic detection of missing or moved files with one-click path relocation.
 - **Storage Diagnostics:** Real-time visual disk usage indicators and cache clearing.
 
-### 🔐 User Authentication & Personal Token Support
-- **Personal Token Dispatch:** Enter your personal Castbox `x-access-token` and optional secret to download private shows, premium subscriber content, and bypass anonymous rate limits.
-- **Zero-Cloud Privacy:** All tokens and credentials are saved locally in OS user data (`settings.json` with strict `0600` permissions) and are never logged, synced, or sent to third-party servers.
+### 🔐 User Authentication & Privacy
+- **1-Click Web Login:** Log in through a secure Castbox browser popup. Session tokens are automatically detected upon login—no manual DevTools or header extraction needed.
+- **Personal Token Dispatch:** Enter or edit your personal `x-access-token` and optional secret manually if desired.
+- **Zero-Cloud Privacy:** All credentials stay strictly on your device (`settings.json` with strict `0600` permissions). They are never polled, never logged, never synced to any server, and only dispatched directly to Castbox's official API.
 
 ---
 
@@ -164,20 +166,31 @@ npm start
 
 ---
 
-## 🔑 How to Setup Personal User Token
+## 🔐 Account Login & Authentication
 
-By default, CastBox Downloader functions in anonymous mode. To download private episodes, access subscriber subscriptions, or avoid public rate limits:
+By default, CastBox Downloader functions in anonymous mode. Logging into your Castbox account unlocks private episodes, subscriber feeds, and bypasses anonymous rate limits.
 
-1. Open your browser and log into [castbox.fm](https://castbox.fm).
-2. Open **Developer Tools** (`F12` or `Cmd + Option + I`) and switch to the **Network** tab.
-3. Refresh or click on any episode to trigger a request to `everest.castbox.fm`.
-4. Select the request and inspect **Request Headers**.
-5. Copy the value of the `x-access-token` header.
-6. Open **CastBox Downloader → Settings → Account & Auth**.
-7. Paste your token and click **Save changes**.
+### Option 1: 1-Click Web Login (Recommended for All Users)
+
+1. Open **Settings** (⚙️ gear icon) in the app sidebar.
+2. Scroll to **Castbox Account & Authentication**.
+3. Click the orange button: **Log in via Castbox Web**.
+4. In the secure popup window, log in with **Google**, **Apple**, **Facebook**, or your **Email**.
+5. Once signed in, the window closes automatically and your account is linked.
+
+### Option 2: Manual Token Entry (Power Users)
+
+If you already have your Castbox session credentials:
+1. Log in to [castbox.fm](https://castbox.fm) in your browser.
+2. Open **Developer Tools** (`Cmd + Option + I` or `F12`) → **Network** tab.
+3. Click any request to `everest.castbox.fm` and find `x-access-token` under **Request Headers**.
+4. In the app, go to **Settings → Castbox Account & Authentication**, paste the token, and click **Save changes**.
 
 > [!NOTE]
-> Your credentials are encrypted and stored in `settings.json` locally on your machine with `0600` access permissions. They are never transmitted anywhere except directly to Castbox's official API.
+> **Privacy & Security Guarantee:**
+> - Credentials are saved strictly to your local device (`settings.json` with secure `0600` file permissions).
+> - Tokens and secrets are **never polled** in background loops, **never logged** to disk or console, and **never uploaded** to any third-party cloud service.
+> - They are only dispatched directly in HTTP headers to Castbox's official API (`everest.castbox.fm`).
 
 ---
 

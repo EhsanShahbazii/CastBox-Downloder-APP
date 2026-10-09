@@ -1,6 +1,6 @@
 {
   "name": "castbox-desktop",
-  "version": "0.1.0-preview.1",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "main": "dist-desktop/main.cjs",
@@ -20,16 +20,53 @@
     "test:library:native": "npm run build:desktop && node scripts/native-library-test.mjs",
     "test:planning:native": "npm run build:desktop && node scripts/native-planning-test.mjs",
     "test:transfers:native": "npm run build:desktop && node scripts/native-transfers-test.mjs",
-    "test:playback:native": "npm run build:desktop && node scripts/native-playback-test.mjs"
+    "test:playback:native": "npm run build:desktop && node scripts/native-playback-test.mjs",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:linux": "npm run build && electron-builder --linux",
+    "dist": "npm run build && electron-builder"
+  },
+  "build": {
+    "appId": "fm.castbox.downloader",
+    "productName": "CastBox Downloader",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist-desktop/**/*",
+      "ai-studio-frontend/dist/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.music",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "linux": {
+      "category": "Audio",
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    }
   },
   "dependencies": {
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@types/node": "^22.14.0",
     "electron": "44.6.0",
+    "electron-builder": "^26.15.3",
     "esbuild": "^0.28.0",
     "tsx": "^4.21.0",
-    "typescript": "^7.0.2",
-    "@types/node": "^22.14.0"
+    "typescript": "^7.0.2"
   }
 }

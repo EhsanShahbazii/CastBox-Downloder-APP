@@ -67,8 +67,8 @@ app.whenReady().then(() => {
     return store.save(settings);
   });
   const grants = new DirectoryGrants();
-  const planner = new DownloadPlanner(grants, library);
-  const transfers = new TransferEngine(library, grants);
+  const planner = new DownloadPlanner(grants, library, catalog);
+  const transfers = new TransferEngine(library, grants, catalog);
   registerTransferIpc(() => window, page, transfers);
   const readStorage = async () => readStorageSnapshot((await store.read()).downloadDestination, await transfers.completedFilesBytes(), await session.defaultSession.getCacheSize());
   register('storage:read', input => { if (input !== undefined) throw new Error('Unexpected storage request.'); return readStorage(); });
@@ -97,6 +97,48 @@ app.whenReady().then(() => {
     } finally { choosingDirectory = false; }
   };
   register('settings:choose-directory', chooseDirectory);
+  register('auth:login-web', async () => {
+    return new Promise((resolve) => {
+      const authWindow = new BrowserWindow({
+        width: 480,
+        height: 720,
+        title: 'Log in to Castbox',
+        parent: window ?? undefined,
+        modal: true,
+        webPreferences: {
+          nodeIntegration: false,
+          contextIsolation: true,
+          sandbox: true,
+        },
+      });
+      authWindow.webContents.setUserAgent(
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+      );
+      let captured = false;
+      const filter = { urls: ['*://everest.castbox.fm/*', '*://*.castbox.fm/*'] };
+      authWindow.webContents.session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+        const headers = details.requestHeaders;
+        const token = headers['x-access-token'] || headers['X-Access-Token'];
+        const secret = headers['x-access-token-secret'] || headers['X-Access-Token-Secret'];
+        if (token && !captured) {
+          captured = true;
+          void store.save({
+            ...store.currentSettings,
+            userToken: token,
+            userTokenSecret: secret ?? '',
+          }).then(saved => {
+            resolve({ userToken: saved.userToken, userTokenSecret: saved.userTokenSecret });
+            if (!authWindow.isDestroyed()) authWindow.close();
+          });
+        }
+        callback({ requestHeaders: headers });
+      });
+      authWindow.on('closed', () => {
+        if (!captured) resolve(null);
+      });
+      void authWindow.loadURL('https://castbox.fm/login');
+    });
+  });
   registerPlanningIpc(() => window, page, planner, chooseDirectory);
   const open = () => {
     window = new BrowserWindow({ width: 1440, height: 1000, minWidth: 960, minHeight: 700,
