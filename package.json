@@ -1,6 +1,8 @@
 {
   "name": "castbox-desktop",
   "version": "1.0.0",
+  "description": "A world-class desktop application for exploring, downloading, and enjoying podcasts offline.",
+  "author": "Ehsan Shahbazi <ehsan@users.noreply.github.com>",
   "private": true,
   "type": "module",
   "main": "dist-desktop/main.cjs",
@@ -29,12 +31,14 @@
   "build": {
     "appId": "fm.castbox.downloader",
     "productName": "CastBox Downloader",
+    "compression": "maximum",
     "directories": {
       "output": "release"
     },
     "files": [
       "dist-desktop/**/*",
       "ai-studio-frontend/dist/**/*",
+      "!node_modules/**/*",
       "package.json"
     ],
     "mac": {
@@ -44,14 +48,21 @@
         "zip"
       ]
     },
+    "dmg": {
+      "format": "UDBZ"
+    },
     "win": {
       "target": [
         "nsis",
         "portable"
       ]
     },
+    "nsis": {
+      "differentialPackage": false
+    },
     "linux": {
       "category": "Audio",
+      "maintainer": "Ehsan Shahbazi <ehsan@users.noreply.github.com>",
       "target": [
         "AppImage",
         "deb"

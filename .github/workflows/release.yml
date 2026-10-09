@@ -54,7 +54,7 @@ jobs:
       - name: Package with electron-builder
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx electron-builder ${{ matrix.target }}
+        run: npx electron-builder ${{ matrix.target }} --publish never
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
