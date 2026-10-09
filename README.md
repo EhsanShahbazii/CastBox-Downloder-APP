@@ -103,8 +103,8 @@ CastBox Downloader features an editorial aesthetic with warm paper backgrounds, 
 ```
 ┌────────────────────────────────────────────────────────┐
 │               React Renderer (UI Shell)                │
-│   • Tailwind CSS Design Tokens   • Lucide Icons         │
-│   • Virtualized Episode Lists    • Web Audio / Player   │
+│   • Tailwind CSS Design Tokens   • Lucide Icons        │
+│   • Virtualized Episode Lists    • Web Audio / Player  │
 └──────────────────────────┬─────────────────────────────┘
                            │ contextBridge (Preload)
                            ▼
